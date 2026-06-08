@@ -1,82 +1,48 @@
 import java.util.PriorityQueue;
-import java.util.Collections;
+import java.util.Scanner;
 
- class SpotifyLeaderboard {
+public class SpotifyTopK {
 
     public static void main(String[] args) {
 
-        // Artist Names
-        String[] artists = {
-                "Artist1", "Artist2", "Artist3",
-                "Artist4", "Artist5", "Artist6",
-                "Artist7", "Artist8", "Artist9",
-                "Artist10", "Artist11", "Artist12"
-        };
+        Scanner sc = new Scanner(System.in);
 
-        // Monthly Listener Counts (in millions)
-        int[] listeners = {
-                45, 12, 78, 23, 56,
-                89, 34, 67, 18, 91,
-                50, 39
-        };
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
 
-        int k = 5;
+        System.out.println("Enter number of artists:");
+        int n = sc.nextInt();
 
-        // Min-Heap for Top 5 Listener Counts
-        PriorityQueue<Integer> minHeap =
-                new PriorityQueue<>();
+        System.out.println("Enter Top-K value:");
+        int k = sc.nextInt();
 
-        System.out.println("Building Min-Heap:\n");
+        System.out.println("Enter Monthly Listener Counts:");
 
-        // Process all artists
-        for (int i = 0; i < listeners.length; i++) {
+        for (int i = 0; i < n; i++) {
 
-            int count = listeners[i];
+            int listeners = sc.nextInt();
 
-            // Fill heap initially
+            // First K elements
             if (minHeap.size() < k) {
-                minHeap.add(count);
 
-                System.out.println(
-                        artists[i] + " inserted -> " + count + "M");
+                minHeap.add(listeners);
             }
 
-            // Replace smallest element if current is larger
-            else if (count > minHeap.peek()) {
-
-                System.out.println(
-                        artists[i] + " replaces "
-                                + minHeap.peek() + "M with "
-                                + count + "M");
+            // Replace minimum if larger value found
+            else if (listeners > minHeap.peek()) {
 
                 minHeap.poll();
-                minHeap.add(count);
-            }
 
-            // Ignore smaller values
-            else {
-
-                System.out.println(
-                        artists[i] + " ignored -> "
-                                + count + "M");
+                minHeap.add(listeners);
             }
         }
 
-        // Display Final Heap
-        System.out.println("\nFinal Min-Heap:");
-        System.out.println(minHeap);
+        System.out.println("\nTop " + k + " Monthly Listener Counts:");
 
-        // Sort results in descending order
-        PriorityQueue<Integer> result =
-                new PriorityQueue<>(Collections.reverseOrder());
+        while (!minHeap.isEmpty()) {
 
-        result.addAll(minHeap);
-
-        // Display Top 5
-        System.out.println("\nTop 5 Artists Listener Counts:");
-
-        while (!result.isEmpty()) {
-            System.out.println(result.poll() + "M");
+            System.out.println(minHeap.poll() + " Million");
         }
+
+        sc.close();
     }
 }
